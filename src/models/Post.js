@@ -14,6 +14,7 @@ const PostSchema = new mongoose.Schema({
     date: { type: Date, required: true, default: Date.now },
     edited: { type: Boolean, required: true, default: false },
     deleted: { type: Boolean, required: true, default: false },
+    topic: { type: String, required: true, default: "General", trim: true },
     username: { type: String, required: true },
     userId: { type: Number, required: true },
     postId: { type: Number, required: true }
