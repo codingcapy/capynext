@@ -61,6 +61,18 @@ export async function createComment(formData) {
     redirect(`/posts/${postId}`)
 }
 
+export async function createReply(formData) {
+    const replies = await Reply.find({})
+    const replyId = replies.length === 0 ? 1 : replies[replies.length - 1].replyId + 1;
+    const content = formData.get('content')
+    const username = formData.get('username')
+    const userId = formData.get('userId')
+    const postId = formData.get('postId')
+    const commentId = formData.get('commentId')
+    await Reply.create({ content, username, userId: parseInt(userId), postId: parseInt(postId), commentId: parseInt(commentId), replyId })
+    redirect(`/posts/${postId}`)
+}
+
 export async function getPosts() {
     try {
         const allPosts = await Post.find({})

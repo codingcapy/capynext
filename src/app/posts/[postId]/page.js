@@ -3,6 +3,8 @@ import { auth } from '@/auth'
 import Post from '@/models/Post'
 import Comment from '@/models/Comment'
 import PostVote from '@/models/PostVote'
+import Reply from '@/models/Reply'
+import CommentComponent from '@/components/CommentComponent'
 import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb'
 import { createComment, createPost } from '@/components/controller';
 
@@ -12,6 +14,7 @@ export default async function PostDetailsPage({ params }) {
     const post = await Post.findOne({ postId: parseInt(params.postId) })
     const comments = await Comment.find({ postId: parseInt(params.postId) })
     const postVotes = await PostVote.find({ postId: parseInt(params.postId) })
+    const replies = await Reply.find({ postId: parseInt(params.postId) })
 
     return (
         <main className='flex-1 mx-auto py-2 px-2'>
@@ -35,7 +38,7 @@ export default async function PostDetailsPage({ params }) {
                             <input type="text" name='postId' id='postId' defaultValue={post.postId} className="hidden" />
                         </div>
                     </form>}
-                    {comments.map((comment) => comment.content)}
+                    {comments.map((comment) => <CommentComponent key={comment.commentId} id={comment.commentId} username={comment.username} user={session?.user} content={comment.content} date={comment.date.toLocaleString()} edited={comment.edited} deleted={comment.deleted} postId={comment.postId} replies={replies.filter((reply) => reply.commentId === comment.commentId)}  />)}
                 </div>
             </div>
         </main>

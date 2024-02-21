@@ -20,7 +20,6 @@ export default async function Home() {
     post = 10
   }
   const posts = await Post.find({ postId: { $gte: 1, $lte: post } }).limit(10)
-  console.log(posts)
   const pages = []
   for (let i = 0; i < allPosts.length; ++i) {
     if (i % 10 == 0) {
