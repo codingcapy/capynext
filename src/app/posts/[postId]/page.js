@@ -1,10 +1,17 @@
 
 import { auth } from '@/auth'
 import Post from '@/models/Post'
+import Comment from '@/models/Comment'
+import PostVote from '@/models/PostVote'
+import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb'
+import { createComment, createPost } from '@/components/controller';
 
 export default async function PostDetailsPage({ params }) {
 
+    const session = await auth();
     const post = await Post.findOne({ postId: parseInt(params.postId) })
+    const comments = await Comment.find({ postId: parseInt(params.postId) })
+    const postVotes = await PostVote.find({ postId: parseInt(params.postId) })
 
     return (
         <main className='flex-1 mx-auto py-2 px-2'>
@@ -12,8 +19,23 @@ export default async function PostDetailsPage({ params }) {
                 <div>
                     <p>Posted by <strong>{post.username}</strong> on {post.date.toLocaleString()} {post.edited && "(edited)"}</p>
                     <h2 className="py-5 text-2xl text-slate-700 font-medium text-center">{post.title}</h2>
-                    
-                    {post.title}
+                    <div><TbArrowBigUp size={25} /></div>
+                    <p className="px-2"> {postVotes.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0)}</p>
+                    <div className=""><TbArrowBigDown size={25} /></div>
+                    <p className="py-3">{post.content}</p>
+                    <h3 className="py-5 text-2xl text-slate-700 font-medium">Comments</h3>
+                    {!session && <p>Please log in to add comments!</p>}
+                    {session && <form action={createComment}>
+                        <label htmlFor="content">Add comment</label>
+                        <div className="flex flex-col">
+                            <textarea type="text" name="content" id="content" placeholder="What are your thoughts?" required rows="5" cols="15" className="px-2 border rounded-lg border-slate-700 py-1" />
+                            <button type="submit" className="rounded-xl my-5 py-2 px-2 bg-slate-700 text-white">Comment</button>
+                            <input type="text" name='username' id='username' defaultValue={session?.user.username} className="hidden" />
+                            <input type="text" name='userId' id='userId' defaultValue={session?.user.userId} className="hidden" />
+                            <input type="text" name='postId' id='postId' defaultValue={post.postId} className="hidden" />
+                        </div>
+                    </form>}
+                    {comments.map((comment) => comment.content)}
                 </div>
             </div>
         </main>
