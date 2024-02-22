@@ -1,4 +1,10 @@
 
+/*
+author: Paul Kim
+date: February 22, 2024
+version: 1.0
+description: Footer component for CapyNext
+ */
 
 export default function Footer() {
     return (

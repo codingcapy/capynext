@@ -1,14 +1,20 @@
 
+/*
+author: Paul Kim
+date: February 22, 2024
+version: 1.0
+description: CommentComponent for CapyNext
+ */
 
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb'
-import { createReply } from "./controller"
-import ReplyComponent from './ReplyComponent'
+import { useState, useEffect } from "react";
+import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb';
+import { createReply } from "./controller";
+import ReplyComponent from './ReplyComponent';
 
 export default function CommentComponent(props) {
-    
+
     const [replyMode, setReplyMode] = useState(false);
     const [loading, setLoading] = useState(true); // Add loading state
 
@@ -42,7 +48,7 @@ export default function CommentComponent(props) {
                 {loading ? (
                     <p>Loading replies...</p>
                 ) : (
-                    props.replies.map((reply) => <ReplyComponent key={reply.replyId} id={reply.replyId} content={reply.content} date={reply.date.toLocaleString()} edited={reply.edited} deleted={reply.deleted} postId={reply.postId} commentId={props.id} username={reply.username} user={props.user} replies={props.replies.filter((reply) => reply.commentId === props.id)}/>)
+                    props.replies.map((reply) => <ReplyComponent key={reply.replyId} id={reply.replyId} content={reply.content} date={reply.date.toLocaleString()} edited={reply.edited} deleted={reply.deleted} postId={reply.postId} commentId={props.id} username={reply.username} user={props.user} replies={props.replies.filter((reply) => reply.commentId === props.id)} />)
                 )}
             </div>
         </div>

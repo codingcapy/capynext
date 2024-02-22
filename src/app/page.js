@@ -1,34 +1,40 @@
 
+/*
+author: Paul Kim
+date: February 22, 2024
+version: 1.0
+description: Home page for CapyNext
+ */
 
-import { auth } from '@/auth'
-import Link from 'next/link'
-import Post from '@/models/Post'
-import Comment from '@/models/Comment'
-import Reply from '@/models/Reply'
-import PostVote from '@/models/PostVote'
+import { auth } from '@/auth';
+import Link from 'next/link';
+import Post from '@/models/Post';
+import Comment from '@/models/Comment';
+import Reply from '@/models/Reply';
+import PostVote from '@/models/PostVote';
 
 export default async function Home() {
 
   const session = await auth();
 
-  const allPosts = await Post.find({})
-  let post = 0
+  const allPosts = await Post.find({});
+  let post = 0;
   if (allPosts.length < 10) {
-    post = allPosts.length
+    post = allPosts.length;
   }
   else {
-    post = 10
+    post = 10;
   }
-  const posts = await Post.find({ postId: { $gte: 1, $lte: post } }).limit(10)
-  const pages = []
+  const posts = await Post.find({ postId: { $gte: 1, $lte: post } }).limit(10);
+  const pages = [];
   for (let i = 0; i < allPosts.length; ++i) {
     if (i % 10 == 0) {
-      pages.push(i / 10 + 1)
+      pages.push(i / 10 + 1);
     }
   }
-  const comments = await Comment.find({ postId: { $gte: 1, $lte: post } })
-  const replies = await Reply.find({ postId: { $gte: 1, $lte: post } })
-  const postVotes = await PostVote.find({ postId: { $gte: 1, $lte: post } })
+  const comments = await Comment.find({ postId: { $gte: 1, $lte: post } });
+  const replies = await Reply.find({ postId: { $gte: 1, $lte: post } });
+  const postVotes = await PostVote.find({ postId: { $gte: 1, $lte: post } });
 
   return (
     <main className='flex-1 mx-auto py-2 px-2'>

@@ -16,6 +16,7 @@ const saltRounds = 10;
 export async function createUser(formData) {
     const users = await User.find({})
     const userId = users.length === 0 ? 1 : users[users.length - 1].userId + 1
+    const _id = users.length === 0 ? 1 : users[users.length - 1].userId + 1
     const username = formData.get("username")
     const password = formData.get("password")
     if (users.find((user) => user.username === username.toString())) {
@@ -23,7 +24,7 @@ export async function createUser(formData) {
     }
     else {
         const encrypted = await bcrypt.hash(password, saltRounds)
-        const user = await User.create({ username: username, password: encrypted, userId: userId })
+        const user = await User.create({ _id, username: username, password: encrypted, userId: userId })
         redirect("/api/auth/signin")
     }
 }
@@ -37,6 +38,7 @@ export async function validateSession() {
 export async function createPost(formData) {
     const posts = await Post.find({})
     const postId = posts.length === 0 ? 1 : posts[posts.length - 1].postId + 1
+    const _id = posts.length === 0 ? 1 : posts[posts.length - 1].postId + 1
     const title = formData.get('title')
     let topic = formData.get('topic')
     if (topic == "") {
@@ -45,32 +47,8 @@ export async function createPost(formData) {
     const content = formData.get('content')
     const username = formData.get('username')
     const userId = formData.get('userId')
-    await Post.create({ title, topic, content, username, userId, postId })
+    await Post.create({ _id, title, topic, content, username, userId, postId })
     redirect("/")
-}
-
-export async function createComment(formData) {
-    const comments = await Comment.find({})
-    const commentId = comments.length === 0 ? 1 : comments[comments.length - 1].commentId + 1;
-    const content = formData.get('content')
-    const username = formData.get('username')
-    const userId = formData.get('userId')
-    const postId = formData.get('postId')
-    await Comment.create({ content, username, commentId, userId, postId: parseInt(postId) })
-    redirect(`/posts/${postId}`)
-}
-
-export async function createReply(formData) {
-    const replies = await Reply.find({})
-    const replyId = replies.length === 0 ? 1 : replies[replies.length - 1].replyId + 1;
-    const _id = replies.length === 0 ? 1 : replies[replies.length - 1].replyId + 1;
-    const content = formData.get('content')
-    const username = formData.get('username')
-    const userId = formData.get('userId')
-    const postId = formData.get('postId')
-    const commentId = formData.get('commentId')
-    await Reply.create({ _id, content, username, userId: parseInt(userId), postId: parseInt(postId), commentId: parseInt(commentId), replyId })
-    redirect(`/posts/${postId}`)
 }
 
 export async function getPosts() {
@@ -93,9 +71,63 @@ export async function getPosts() {
         const comments = await Comment.find({ postId: { $gte: 1, $lte: post } })
         const replies = await Reply.find({ postId: { $gte: 1, $lte: post } })
         const postVotes = await PostVote.find({ postId: { $gte: 1, $lte: post } })
-        //res.json({ posts, comments, replies, postVotes, pages });
     }
     catch (err) {
-        //res.status(500).json({ msg: err })
+        console.log(err)
     }
+}
+
+export async function updatePost(formData) {
+    const postId = formData.get('postId')
+    const title = formData.get('title')
+    const topic = formData.get('topic')
+    const content = formData.get('content')
+    const edited = true;
+    const deleted = false;
+    await Post.findOneAndUpdate(
+        { postId: postId },
+        { title, topic, content, edited, deleted },
+        { new: true }
+    );
+    redirect(`/posts/${postId}`)
+}
+
+export async function deletePost(formData) {
+    const postId = formData.get('postId')
+    const title = formData.get('title')
+    const topic = formData.get('topic')
+    const content = "[This post was deleted]"
+    const edited = false;
+    const deleted = true;
+    await Post.findOneAndUpdate(
+        { postId: postId },
+        { title, topic, content, edited, deleted },
+        { new: true }
+    );
+    redirect(`/posts/${postId}`)
+}
+
+export async function createComment(formData) {
+    const comments = await Comment.find({})
+    const commentId = comments.length === 0 ? 1 : comments[comments.length - 1].commentId + 1;
+    const _id = comments.length === 0 ? 1 : comments[comments.length - 1].commentId + 1;
+    const content = formData.get('content')
+    const username = formData.get('username')
+    const userId = formData.get('userId')
+    const postId = formData.get('postId')
+    await Comment.create({ _id, content, username, commentId, userId, postId: parseInt(postId) })
+    redirect(`/posts/${postId}`)
+}
+
+export async function createReply(formData) {
+    const replies = await Reply.find({})
+    const replyId = replies.length === 0 ? 1 : replies[replies.length - 1].replyId + 1;
+    const _id = replies.length === 0 ? 1 : replies[replies.length - 1].replyId + 1;
+    const content = formData.get('content')
+    const username = formData.get('username')
+    const userId = formData.get('userId')
+    const postId = formData.get('postId')
+    const commentId = formData.get('commentId')
+    await Reply.create({ _id, content, username, userId: parseInt(userId), postId: parseInt(postId), commentId: parseInt(commentId), replyId })
+    redirect(`/posts/${postId}`)
 }

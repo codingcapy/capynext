@@ -1,9 +1,14 @@
 
-
+/*
+author: Paul Kim
+date: February 22, 2024
+version: 1.0
+description: Header component for CapyNext
+ */
 
 import Link from "next/link";
-import { auth } from '@/auth'
-import Logout from "@/components/Logout"
+import { auth } from '@/auth';
+import Logout from "@/components/Logout";
 
 export default async function Header() {
 

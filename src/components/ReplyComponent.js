@@ -1,13 +1,20 @@
 
-"use client"
+/*
+author: Paul Kim
+date: February 22, 2024
+version: 1.0
+description: ReplyComponent for CapyNext
+ */
 
-import { useState, useEffect } from "react"
-import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb'
-import { createReply } from "./controller"
+"use client";
+
+import { useState, useEffect } from "react";
+import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb';
+import { createReply } from "./controller";
 
 export default function ReplyComponent(props) {
 
-    const [replyMode, setReplyMode] = useState(false)
+    const [replyMode, setReplyMode] = useState(false);
     const [loading, setLoading] = useState(true); // Add loading state
 
     useEffect(() => {
@@ -16,7 +23,7 @@ export default function ReplyComponent(props) {
     }, [props.replies]);
 
     function toggleReplyMode() {
-        setReplyMode(!replyMode)
+        setReplyMode(!replyMode);
     }
 
     return (
@@ -36,7 +43,7 @@ export default function ReplyComponent(props) {
                 </form>
             </div>}
             <div>
-            {loading ? (
+                {loading ? (
                     <p>Loading replies...</p>
                 ) : ""}
             </div>

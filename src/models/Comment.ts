@@ -1,14 +1,15 @@
 
 /*
 author: Paul Kim
-date: December 15, 2023
+date: February 22, 2024
 version: 1.0
-description: comment schema for CocoDogo
+description: Comment model schema for CapyNext
  */
 
 import mongoose from "mongoose";
 
 const CommentSchema = new mongoose.Schema({
+    _id: { type: Number, required: true, default: 1 },
     content: { type: String, required: [true, 'content is required'], trim: true, maxlength: [40000, 'content char limit is 40000'] },
     date: { type: Date, default: Date.now },
     edited: { type: Boolean, default: false },
@@ -19,5 +20,5 @@ const CommentSchema = new mongoose.Schema({
     commentId: { type: Number, required: true }
 })
 
-const Comment = mongoose.models.Comment || mongoose.model('Comment', CommentSchema)
+const Comment = mongoose.models.Comment || mongoose.model('Comment', CommentSchema);
 export default Comment;

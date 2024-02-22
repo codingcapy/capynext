@@ -1,9 +1,17 @@
-import { Inter } from 'next/font/google'
-import './globals.css'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 
-const inter = Inter({ subsets: ['latin'] })
+/*
+author: Paul Kim
+date: February 22, 2024
+version: 1.0
+description: layout for CapyNext
+ */
+
+import { Inter } from 'next/font/google';
+import './globals.css';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'CapyNext',

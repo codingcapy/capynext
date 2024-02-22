@@ -1,4 +1,10 @@
 
+/*
+author: Paul Kim
+date: February 22, 2024
+version: 1.0
+description: create post page for CapyNext
+ */
 
 import { createPost } from "@/components/controller";
 import { auth } from "@/auth";

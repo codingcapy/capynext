@@ -1,4 +1,11 @@
 
+/*
+author: Paul Kim
+date: February 22, 2024
+version: 1.0
+description: signup page for CapyNext
+ */
+
 import Link from "next/link";
 import { createUser } from "@/components/controller";
 

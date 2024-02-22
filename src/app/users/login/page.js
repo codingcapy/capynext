@@ -1,5 +1,12 @@
 
-import Link from "next/link"
+/*
+author: Paul Kim
+date: February 22, 2024
+version: 1.0
+description: login page for CapyNext
+ */
+
+import Link from "next/link";
 
 export default function LoginPage() {
     return (

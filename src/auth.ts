@@ -1,12 +1,20 @@
-import type { NextAuthConfig } from "next-auth"
-import NextAuth from "next-auth"
-import GitHub from "next-auth/providers/GitHub"
-import CredentialsProvider from "next-auth/providers/credentials"
-import { MongoDBAdapter } from "@auth/mongodb-adapter"
-import clientPromise from "./lib/mongoclient"
-import User from "./models/User"
-import bcrypt from "bcryptjs"
-import db from "@/db/connect"
+
+/*
+author: Paul Kim
+date: February 22, 2024
+version: 1.0
+description: auth for CapyNext
+ */
+
+import type { NextAuthConfig } from "next-auth";
+import NextAuth from "next-auth";
+import GitHub from "next-auth/providers/GitHub";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import clientPromise from "./lib/mongoclient";
+import User from "./models/User";
+import bcrypt from "bcryptjs";
+import db from "@/db/connect";
 
 export const authConfig = {
     adapter: MongoDBAdapter(clientPromise),

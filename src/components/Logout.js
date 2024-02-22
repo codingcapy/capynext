@@ -1,9 +1,16 @@
 
-'use client'
+/*
+author: Paul Kim
+date: February 22, 2024
+version: 1.0
+description: Logout component for CapyNext
+ */
 
-import { signOut } from "next-auth/react"
+'use client';
+
+import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { redirect } from "next/navigation"
+import { redirect } from "next/navigation";
 
 export default function Logout() {
     return (

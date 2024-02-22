@@ -1,9 +1,9 @@
 
 /*
 author: Paul Kim
-date: December 15, 2023
+date: February 22, 2024
 version: 1.0
-description: reply schema for CocoDogo
+description: Reply model schema for CapyNext
  */
 
 import mongoose from "mongoose";
@@ -21,5 +21,5 @@ const ReplySchema = new mongoose.Schema({
     replyId: { type: Number, required: true }
 })
 
-const Reply = mongoose.models.Reply || mongoose.model('Reply', ReplySchema)
+const Reply = mongoose.models.Reply || mongoose.model('Reply', ReplySchema);
 export default Reply;
