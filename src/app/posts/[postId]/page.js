@@ -11,10 +11,7 @@ import Post from '@/models/Post';
 import Comment from '@/models/Comment';
 import PostVote from '@/models/PostVote';
 import Reply from '@/models/Reply';
-import CommentComponent from '@/components/CommentComponent';
 import PostComponent from '@/components/PostComponent';
-import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb';
-import { createComment, createPost } from '@/components/controller';
 
 export default async function PostDetailsPage({ params }) {
 

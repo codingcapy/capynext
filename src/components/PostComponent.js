@@ -9,7 +9,7 @@ description: ReplyComponent for CapyNext
 "use client";
 
 import { useState } from "react";
-import { createComment } from "./controller";
+import { createComment, updatePost } from "./controller";
 import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb';
 import CommentComponent from '@/components/CommentComponent';
 
@@ -18,6 +18,7 @@ export default function PostComponent(props) {
 
     const [editMode, setEditMode] = useState(false);
     const [editedTitle, setEditedTitle] = useState(props.post.title);
+    const [editedTopic, setEditedTopic] = useState(props.post.topic);
     const [editedContent, setEditedContent] = useState(props.post.content);
 
     function toggleEditMode() {
@@ -27,18 +28,24 @@ export default function PostComponent(props) {
     return (
         <div className="py-10 px-10 shadow-xl">
             {editMode
-                ? <form className="flex flex-col">
+                ? <form action={updatePost} className="flex flex-col">
                     <h2>Edit Post</h2>
                     <div className="flex flex-col">
                         <label htmlFor="title">Title</label>
                         <input type="text" name='title' id='title' placeholder="Title" value={editedTitle}
                             onChange={(e) => setEditedTitle(e.target.value)} required className="px-2 border rounded-lg border-slate-700 py-1" />
                     </div>
+                    <div className="flex flex-col">
+                        <label htmlFor="topic">Topic</label>
+                        <input type="text" name='topic' id='topic' placeholder="Topic" value={editedTopic}
+                            onChange={(e) => setEditedTopic(e.target.value)} required className="px-2 border rounded-lg border-slate-700 py-1" />
+                    </div>
                     <div className="flex flex-col my-2">
                         <label htmlFor="content">Content</label>
                         <textarea type="text" name='content' id='content' placeholder='Content' value={editedContent}
                             onChange={(e) => setEditedContent(e.target.value)} required rows="10" cols="50" className="px-2 border rounded-lg border-slate-700 py-1" />
                     </div>
+                    <input type="text" name='postId' id='postId' value={props.post.postId} required className="hidden" />
                     <button type="submit" className="rounded-xl my-5 py-2 px-2 bg-slate-700 text-white">Update</button>
                     <button onClick={toggleEditMode} className="">Cancel</button>
                 </form>

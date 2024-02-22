@@ -6,7 +6,6 @@ version: 1.0
 description: Home page for CapyNext
  */
 
-import { auth } from '@/auth';
 import Link from 'next/link';
 import Post from '@/models/Post';
 import Comment from '@/models/Comment';
@@ -14,8 +13,6 @@ import Reply from '@/models/Reply';
 import PostVote from '@/models/PostVote';
 
 export default async function Home() {
-
-  const session = await auth();
 
   const allPosts = await Post.find({});
   let post = 0;
