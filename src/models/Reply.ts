@@ -9,6 +9,7 @@ description: reply schema for CocoDogo
 import mongoose from "mongoose";
 
 const ReplySchema = new mongoose.Schema({
+    _id: { type: Number, required: true, default: 1 },
     content: { type: String, required: [true, 'content is required'], trim: true, maxlength: [40000, 'content char limit is 40000'] },
     date: { type: Date, default: Date.now },
     edited: { type: Boolean, default: false },
@@ -20,5 +21,5 @@ const ReplySchema = new mongoose.Schema({
     replyId: { type: Number, required: true }
 })
 
-const Reply =  mongoose.models.Reply || mongoose.model('Reply', ReplySchema)
+const Reply = mongoose.models.Reply || mongoose.model('Reply', ReplySchema)
 export default Reply;
