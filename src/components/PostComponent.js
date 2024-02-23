@@ -9,7 +9,7 @@ description: ReplyComponent for CapyNext
 "use client";
 
 import { useState } from "react";
-import { createComment, updatePost } from "./controller";
+import { createComment, deletePost, updatePost } from "./controller";
 import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb';
 import CommentComponent from '@/components/CommentComponent';
 
@@ -23,6 +23,19 @@ export default function PostComponent(props) {
 
     function toggleEditMode() {
         setEditMode(!editMode);
+    }
+
+    function formatDate(date) {
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true,
+        };
+        return new Date(date).toLocaleString('en-US', options);
     }
 
     return (
@@ -45,18 +58,19 @@ export default function PostComponent(props) {
                         <textarea type="text" name='content' id='content' placeholder='Content' value={editedContent}
                             onChange={(e) => setEditedContent(e.target.value)} required rows="10" cols="50" className="px-2 border rounded-lg border-slate-700 py-1" />
                     </div>
-                    <input type="text" name='postId' id='postId' value={props.post.postId} required className="hidden" />
+                    <input type="text" name='postId' id='postId' defaultValue={props.post.postId} required className="hidden" />
                     <button type="submit" className="rounded-xl my-5 py-2 px-2 bg-slate-700 text-white">Update</button>
                     <button onClick={toggleEditMode} className="">Cancel</button>
                 </form>
                 : <div>
-                    <p>Posted by <strong>{props.post.username}</strong> on {props.post.date.toLocaleString()} {props.post.edited && "(edited)"}</p>
+                    <p>Posted by <strong>{props.post.username}</strong> on {formatDate(props.post.date)} {props.post.edited && "(edited)"}</p>
                     <h2 className="py-5 text-2xl text-slate-700 font-medium text-center">{props.post.title}</h2>
                     <div><TbArrowBigUp size={25} /></div>
                     <p className="px-2"> {props.postVotes.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0)}</p>
                     <div className=""><TbArrowBigDown size={25} /></div>
                     <p className="py-3">{props.post.content}</p>
                     {props.post.deleted ? "" : props.session?.user?.username === props.post.username && <button onClick={toggleEditMode} className="px-3 py-3 font-bold">Edit</button>}
+                    {props.post.deleted ? "" : props.session?.user?.username === props.post.username && <form action={deletePost}><input type="text" name='postId' id='postId' defaultValue={props.post.postId} required className="hidden" /><button type="submit" className="px-3 font-bold">Delete</button></form>}
                     <h3 className="py-5 text-2xl text-slate-700 font-medium">Comments</h3>
                     {!props.session && <p>Please log in to add comments!</p>}
                     {props.session && <form action={createComment}>

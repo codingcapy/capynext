@@ -94,14 +94,12 @@ export async function updatePost(formData) {
 
 export async function deletePost(formData) {
     const postId = formData.get('postId')
-    const title = formData.get('title')
-    const topic = formData.get('topic')
     const content = "[This post was deleted]"
     const edited = false;
     const deleted = true;
     await Post.findOneAndUpdate(
         { postId: postId },
-        { title, topic, content, edited, deleted },
+        { content, edited, deleted },
         { new: true }
     );
     redirect(`/posts/${postId}`)
@@ -116,6 +114,20 @@ export async function createComment(formData) {
     const userId = formData.get('userId')
     const postId = formData.get('postId')
     await Comment.create({ _id, content, username, commentId, userId, postId: parseInt(postId) })
+    redirect(`/posts/${postId}`)
+}
+
+export async function updateComment(formData) {
+    const postId = formData.get('postId')
+    const commentId = formData.get('commentId')
+    const content = formData.get('content')
+    const edited = true;
+    const deleted = false;
+    await Comment.findOneAndUpdate(
+        { commentId: parseInt(commentId) },
+        { content, edited, deleted },
+        { new: true }
+    );
     redirect(`/posts/${postId}`)
 }
 

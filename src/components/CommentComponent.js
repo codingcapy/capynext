@@ -10,18 +10,24 @@ description: CommentComponent for CapyNext
 
 import { useState, useEffect } from "react";
 import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb';
-import { createReply } from "./controller";
+import { createReply, updateComment } from "./controller";
 import ReplyComponent from './ReplyComponent';
 
 export default function CommentComponent(props) {
 
+    const [commentEditMode, setCommentEditMode] = useState(false)
     const [replyMode, setReplyMode] = useState(false);
+    const [editedContent, setEditedContent] = useState(props.content);
     const [loading, setLoading] = useState(true); // Add loading state
 
     useEffect(() => {
         setLoading(true); // Set loading to true when component mounts
         setLoading(false); // Set loading to false when replies are received
     }, [props.replies]);
+
+    function toggleCommentEditMode() {
+        setCommentEditMode(!commentEditMode)
+    }
 
     function toggleReplyMode() {
         setReplyMode(!replyMode);
@@ -30,7 +36,13 @@ export default function CommentComponent(props) {
     return (
         <div className="my-3">
             <p className="py-2"><strong>{props.username}</strong> {props.date} {props.edited && '(edited)'}</p>
-            <p className="py-2">{props.content} {props.deleted ? "" : props.username === props.user?.username && <button className="font-bold">Edit</button>}</p>
+            {commentEditMode
+                ? <form>
+                    <input type="text" name="content" id="content" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} className="px-2 py-1 border rounded-lg border-slate-700" required />
+                    <p><button type="submit" className="font-bold">Update</button>
+                        <button onClick={toggleCommentEditMode} className="px-3 font-bold">Cancel</button></p>
+                </form>
+                :<p className="py-2">{props.content} {props.deleted ? "" : props.username === props.user?.username && <button onClick={toggleCommentEditMode} className="font-bold">Edit</button>}</p>}
             <p>Upvotes: <button className="px-1"><TbArrowBigUp size={20} /></button><button className="px-1"><TbArrowBigDown size={20} /></button>
                 {props.user && <button onClick={toggleReplyMode} className="px-3 font-bold">Reply</button>}</p>
             {replyMode && <div>
