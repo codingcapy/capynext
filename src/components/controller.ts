@@ -1,4 +1,10 @@
 
+/*
+author: Paul Kim
+date: February 22, 2024
+version: 1.0
+description: controller component for CapyNext
+ */
 
 "use server"
 
@@ -131,6 +137,20 @@ export async function updateComment(formData) {
     redirect(`/posts/${postId}`)
 }
 
+export async function deleteComment(formData) {
+    const postId = formData.get('postId')
+    const commentId = formData.get('commentId')
+    const content = "[This post was deleted]"
+    const edited = false;
+    const deleted = true;
+    await Comment.findOneAndUpdate(
+        { commentId: parseInt(commentId) },
+        { content, edited, deleted },
+        { new: true }
+    );
+    redirect(`/posts/${postId}`)
+}
+
 export async function createReply(formData) {
     const replies = await Reply.find({})
     const replyId = replies.length === 0 ? 1 : replies[replies.length - 1].replyId + 1;
@@ -141,5 +161,33 @@ export async function createReply(formData) {
     const postId = formData.get('postId')
     const commentId = formData.get('commentId')
     await Reply.create({ _id, content, username, userId: parseInt(userId), postId: parseInt(postId), commentId: parseInt(commentId), replyId })
+    redirect(`/posts/${postId}`)
+}
+
+export async function updateReply(formData){
+    const postId = formData.get('postId')
+    const replyId = formData.get('replyId')
+    const content = formData.get('content')
+    const edited = true;
+    const deleted = false;
+    await Reply.findOneAndUpdate(
+        { replyId: parseInt(replyId) },
+        { content, edited, deleted },
+        { new: true }
+    );
+    redirect(`/posts/${postId}`)
+}
+
+export async function deleteReply(formData) {
+    const postId = formData.get('postId')
+    const replyId = formData.get('replyId')
+    const content = "[This post was deleted]"
+    const edited = false;
+    const deleted = true;
+    await Reply.findOneAndUpdate(
+        { replyId: parseInt(replyId) },
+        { content, edited, deleted },
+        { new: true }
+    );
     redirect(`/posts/${postId}`)
 }

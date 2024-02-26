@@ -28,8 +28,10 @@ export default async function PostDetailsPage({ params }) {
         hour: 'numeric',
         minute: 'numeric',
         second: 'numeric',
-        hour12: true,
+        hour12: false,
     });
+
+    console.log(post.date)
 
     return (
         <main className='flex-1 mx-auto py-2 px-2'>

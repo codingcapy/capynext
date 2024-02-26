@@ -33,10 +33,12 @@ export default function PostComponent(props) {
             hour: 'numeric',
             minute: 'numeric',
             second: 'numeric',
-            hour12: true,
+            hour12: false,
         };
         return new Date(date).toLocaleString('en-US', options);
     }
+
+    console.log(formatDate(props.post.date))
 
     return (
         <div className="py-10 px-10 shadow-xl">
@@ -83,7 +85,7 @@ export default function PostComponent(props) {
                             <input type="text" name='postId' id='postId' defaultValue={props.post.postId} className="hidden" />
                         </div>
                     </form>}
-                    {props.comments.map((comment) => <CommentComponent key={comment.commentId} id={comment.commentId} username={comment.username} user={props.session?.user} content={comment.content} date={comment.date.toLocaleString()} edited={comment.edited} deleted={comment.deleted} postId={comment.postId} replies={props.replies.filter((reply) => reply.commentId === comment.commentId)} />)}
+                    {props.comments.map((comment) => <CommentComponent key={comment.commentId} commentId={comment.commentId} username={comment.username} user={props.session?.user} content={comment.content} date={formatDate(comment.date)} edited={comment.edited} deleted={comment.deleted} postId={comment.postId} replies={props.replies.filter((reply) => reply.commentId === comment.commentId)} />)}
                 </div>}
         </div>
     )
