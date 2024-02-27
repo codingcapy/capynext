@@ -32,6 +32,14 @@ export default function ReplyComponent(props) {
         setReplyEditMode(!replyEditMode)
     }
 
+    useEffect(()=>{
+        setReplyEditMode(false)
+    },[props.content])
+
+    useEffect(()=>{
+        setReplyMode(false)
+    },[props.replies])
+
     return (
         <div className="ml-5 pl-2 my-3 border border-cyan-400 border-t-0 border-l-2 border-r-0 border-b-0">
             <p className="py-2"><strong>{props.username}</strong> {props.date} {props.edited && '(edited)'}</p>

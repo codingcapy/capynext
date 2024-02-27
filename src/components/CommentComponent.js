@@ -33,6 +33,14 @@ export default function CommentComponent(props) {
         setReplyMode(!replyMode);
     }
 
+    useEffect(()=>{
+        setCommentEditMode(false)
+    },[props.content])
+
+    useEffect(()=>{
+        setReplyMode(false)
+    },[props.comments])
+
     return (
         <div className="my-3">
             <p className="py-2"><strong>{props.username}</strong> {props.date} {props.edited && '(edited)'}</p>

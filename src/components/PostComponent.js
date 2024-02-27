@@ -8,7 +8,7 @@ description: ReplyComponent for CapyNext
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createComment, deletePost, updatePost } from "./controller";
 import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb';
 import CommentComponent from '@/components/CommentComponent';
@@ -20,6 +20,7 @@ export default function PostComponent(props) {
     const [editedTitle, setEditedTitle] = useState(props.post.title);
     const [editedTopic, setEditedTopic] = useState(props.post.topic);
     const [editedContent, setEditedContent] = useState(props.post.content);
+    const [commentContent, setCommentContent] = useState("")
 
     function toggleEditMode() {
         setEditMode(!editMode);
@@ -38,7 +39,13 @@ export default function PostComponent(props) {
         return new Date(date).toLocaleString('en-US', options);
     }
 
-    console.log(formatDate(props.post.date))
+    useEffect(()=>{
+        setEditMode(false)
+    }, [props.post])
+
+    useEffect(()=>{
+        setCommentContent("")
+    }, [props.comments])
 
     return (
         <div className="py-10 px-10 shadow-xl">
@@ -78,14 +85,14 @@ export default function PostComponent(props) {
                     {props.session && <form action={createComment}>
                         <label htmlFor="content">Add comment</label>
                         <div className="flex flex-col">
-                            <textarea type="text" name="content" id="content" placeholder="What are your thoughts?" required rows="5" cols="15" className="px-2 border rounded-lg border-slate-700 py-1" />
+                            <textarea type="text" name="content" id="content" placeholder="What are your thoughts?" required value={commentContent} onChange={(e) => setCommentContent(e.target.value)}rows="5" cols="15" className="px-2 border rounded-lg border-slate-700 py-1" />
                             <button type="submit" className="rounded-xl my-5 py-2 px-2 bg-slate-700 text-white">Comment</button>
                             <input type="text" name='username' id='username' defaultValue={props.session?.user.username} className="hidden" />
                             <input type="text" name='userId' id='userId' defaultValue={props.session?.user.userId} className="hidden" />
                             <input type="text" name='postId' id='postId' defaultValue={props.post.postId} className="hidden" />
                         </div>
                     </form>}
-                    {props.comments.map((comment) => <CommentComponent key={comment.commentId} commentId={comment.commentId} username={comment.username} user={props.session?.user} content={comment.content} date={formatDate(comment.date)} edited={comment.edited} deleted={comment.deleted} postId={comment.postId} replies={props.replies.filter((reply) => reply.commentId === comment.commentId)} />)}
+                    {props.comments.map((comment) => <CommentComponent key={comment.commentId} commentId={comment.commentId} username={comment.username} user={props.session?.user} content={comment.content} date={formatDate(comment.date)} edited={comment.edited} deleted={comment.deleted} postId={comment.postId} replies={props.replies.filter((reply) => reply.commentId === comment.commentId)} comments={props.comments} />)}
                 </div>}
         </div>
     )
