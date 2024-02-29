@@ -9,9 +9,10 @@ description: ReplyComponent for CapyNext
 "use client";
 
 import { useEffect, useState } from "react";
-import { createComment, deletePost, updatePost } from "./controller";
+import { createComment, createPostVote, deletePost, updatePost } from "./controller";
 import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb';
 import CommentComponent from '@/components/CommentComponent';
+import Link from "next/link";
 
 
 export default function PostComponent(props) {
@@ -39,11 +40,11 @@ export default function PostComponent(props) {
         return new Date(date).toLocaleString('en-US', options);
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         setEditMode(false)
     }, [props.post])
 
-    useEffect(()=>{
+    useEffect(() => {
         setCommentContent("")
     }, [props.comments])
 
@@ -74,9 +75,19 @@ export default function PostComponent(props) {
                 : <div>
                     <p>Posted by <strong>{props.post.username}</strong> on {formatDate(props.post.date)} {props.post.edited && "(edited)"}</p>
                     <h2 className="py-5 text-2xl text-slate-700 font-medium text-center">{props.post.title}</h2>
-                    <div><TbArrowBigUp size={25} /></div>
+                    {props.session?.user?.username !== props.post.username
+                        ? props.postVotes.find((postVote) => postVote.voterId === props.session.user?.userId) !== undefined && props.postVotes.find((postVote) => postVote.voterId === props.session.user?.userId).value > 0
+                            ? props.session?.user && <form action={createPostVote}><button type="submit" className=""><TbArrowBigUpFilled size={25} /></button></form>
+                            : props.session?.user && <div><TbArrowBigUp size={25} /></div>
+                        : <div><TbArrowBigUp size={25} /></div>}
+                    {!props.session?.user && <Link href={"/api/auth/signin"}><TbArrowBigUp size={25} /></Link>}
                     <p className="px-2"> {props.postVotes.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0)}</p>
-                    <div className=""><TbArrowBigDown size={25} /></div>
+                    {props.session?.user?.username !== props.post.username
+                        ? props.postVotes.find((postVote) => postVote.voterId === props.session.user?.userId) !== undefined && props.postVotes.find((postVote) => postVote.voterId === props.session.user?.userId).value < 0
+                            ? props.session?.user && <div className=""><TbArrowBigDownFilled size={25} /></div>
+                            : props.session?.user && <div><TbArrowBigDown size={25} /></div>
+                        : <div className=""><TbArrowBigDown size={25} /></div>}
+                    {!props.session?.user && <Link href={"/api/auth/signin"}><TbArrowBigDown size={25} /></Link>}
                     <p className="py-3">{props.post.content}</p>
                     {props.post.deleted ? "" : props.session?.user?.username === props.post.username && <button onClick={toggleEditMode} className="px-3 py-3 font-bold">Edit</button>}
                     {props.post.deleted ? "" : props.session?.user?.username === props.post.username && <form action={deletePost}><input type="text" name='postId' id='postId' defaultValue={props.post.postId} required className="hidden" /><button type="submit" className="px-3 font-bold">Delete</button></form>}
@@ -85,7 +96,7 @@ export default function PostComponent(props) {
                     {props.session && <form action={createComment}>
                         <label htmlFor="content">Add comment</label>
                         <div className="flex flex-col">
-                            <textarea type="text" name="content" id="content" placeholder="What are your thoughts?" required value={commentContent} onChange={(e) => setCommentContent(e.target.value)}rows="5" cols="15" className="px-2 border rounded-lg border-slate-700 py-1" />
+                            <textarea type="text" name="content" id="content" placeholder="What are your thoughts?" required value={commentContent} onChange={(e) => setCommentContent(e.target.value)} rows="5" cols="15" className="px-2 border rounded-lg border-slate-700 py-1" />
                             <button type="submit" className="rounded-xl my-5 py-2 px-2 bg-slate-700 text-white">Comment</button>
                             <input type="text" name='username' id='username' defaultValue={props.session?.user.username} className="hidden" />
                             <input type="text" name='userId' id='userId' defaultValue={props.session?.user.userId} className="hidden" />

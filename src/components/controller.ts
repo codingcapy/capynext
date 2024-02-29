@@ -164,7 +164,7 @@ export async function createReply(formData) {
     redirect(`/posts/${postId}`)
 }
 
-export async function updateReply(formData){
+export async function updateReply(formData) {
     const postId = formData.get('postId')
     const replyId = formData.get('replyId')
     const content = formData.get('content')
@@ -189,5 +189,16 @@ export async function deleteReply(formData) {
         { content, edited, deleted },
         { new: true }
     );
+    redirect(`/posts/${postId}`)
+}
+
+export async function createPostVote(formData) {
+    const postVotes = await PostVote.find({})
+    const postVoteId = postVotes.length === 0 ? 1 : postVotes[postVotes.length - 1].postVoteId + 1
+    const _id = postVotes.length === 0 ? 1 : postVotes[postVotes.length - 1].postVoteId + 1
+    const value = formData.get('value')
+    const postId = formData.get('postId')
+    const voterId = formData.get('voterId')
+    await PostVote.create({ _id, value, postId, voterId, postVoteId })
     redirect(`/posts/${postId}`)
 }
