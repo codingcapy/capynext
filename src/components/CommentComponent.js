@@ -109,7 +109,18 @@ export default function CommentComponent(props) {
                 {loading ? (
                     <p>Loading replies...</p>
                 ) : (
-                    props.replies.map((reply) => <ReplyComponent key={reply.replyId} replyId={reply.replyId} content={reply.content} date={reply.date.toLocaleString()} edited={reply.edited} deleted={reply.deleted} postId={reply.postId} commentId={props.commentId} username={reply.username} user={props.user} replies={props.replies.filter((reply) => reply.commentId === props.commentId)} />)
+                    props.replies.map((reply) => <ReplyComponent 
+                    key={reply.replyId} 
+                    replyId={reply.replyId} 
+                    content={reply.content} 
+                    date={reply.date.toLocaleString()} 
+                    edited={reply.edited} 
+                    deleted={reply.deleted} 
+                    postId={reply.postId} 
+                    commentId={props.commentId} 
+                    username={reply.username} 
+                    user={props.user} 
+                    replies={props.replies.filter((reply) => reply.commentId === props.commentId)} />)
                 )}
             </div>
         </div>

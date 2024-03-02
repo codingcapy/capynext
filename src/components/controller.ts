@@ -17,6 +17,7 @@ import Comment from "../models/Comment";
 import Reply from "../models/Reply"
 import PostVote from "../models/PostVote"
 import CommentVote from "@/models/CommentVote";
+import ReplyVote from "@/models/ReplyVote";
 
 const saltRounds = 10;
 
@@ -202,7 +203,7 @@ export async function createPostVote(formData) {
     const voterId = formData.get('voterId')
     const postVote = await PostVote.find({ voterId: voterId })
     if (postVote.length > 0) {
-        await PostVote.findOneAndUpdate({ voterId: voterId }, { value })
+        await PostVote.findOneAndUpdate({ voterId: voterId, postId: postId }, { value })
         redirect(`/posts/${postId}`)
     }
     else {
@@ -220,7 +221,7 @@ export async function createCommentVote(formData) {
     const postId = formData.get('postId')
     const commentId = formData.get('commentId')
     const voterId = formData.get('voterId')
-    const commentVote = await CommentVote.find({ voterId: voterId })
+    const commentVote = await CommentVote.find({ voterId: voterId, commentId: commentId })
     if (commentVote.length > 0) {
         await CommentVote.findOneAndUpdate({ voterId: voterId }, { value })
         redirect(`/posts/${postId}`)
@@ -228,6 +229,27 @@ export async function createCommentVote(formData) {
     else {
 
         await CommentVote.create({ _id, value, postId, voterId, commentId, commentVoteId })
+        redirect(`/posts/${postId}`)
+    }
+}
+
+export async function createReplyVote(formData) {
+    const replyVotes = await ReplyVote.find({})
+    const replyVoteId = replyVotes.length === 0 ? 1 : replyVotes[replyVotes.length - 1].replyVoteId + 1
+    const _id = replyVotes.length === 0 ? 1 : replyVotes[replyVotes.length - 1].replyVoteId + 1
+    const value = formData.get('value')
+    const postId = formData.get('postId')
+    const commentId = formData.get('commentId')
+    const replyId = formData.get('replyId')
+    const voterId = formData.get('voterId')
+    const replyVote = await ReplyVote.find({ voterId: voterId, replyId: replyId })
+    if (replyVote.length > 0) {
+        await ReplyVote.findOneAndUpdate({ voterId: voterId }, { value })
+        redirect(`/posts/${postId}`)
+    }
+    else {
+
+        await ReplyVote.create({ _id, value, postId, voterId, commentId, replyId, replyVoteId })
         redirect(`/posts/${postId}`)
     }
 }
