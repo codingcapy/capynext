@@ -199,6 +199,14 @@ export async function createPostVote(formData) {
     const value = formData.get('value')
     const postId = formData.get('postId')
     const voterId = formData.get('voterId')
-    await PostVote.create({ _id, value, postId, voterId, postVoteId })
-    redirect(`/posts/${postId}`)
+    const postVote = await PostVote.find({ voterId: voterId })
+    if (postVote.length > 0) {
+        await PostVote.findOneAndUpdate({ voterId: voterId }, { value })
+        redirect(`/posts/${postId}`)
+    }
+    else {
+
+        await PostVote.create({ _id, value, postId, voterId, postVoteId })
+        redirect(`/posts/${postId}`)
+    }
 }

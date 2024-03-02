@@ -77,15 +77,34 @@ export default function PostComponent(props) {
                     <h2 className="py-5 text-2xl text-slate-700 font-medium text-center">{props.post.title}</h2>
                     {props.session?.user?.username !== props.post.username
                         ? props.postVotes.find((postVote) => postVote.voterId === props.session.user?.userId) !== undefined && props.postVotes.find((postVote) => postVote.voterId === props.session.user?.userId).value > 0
-                            ? props.session?.user && <form action={createPostVote}><button type="submit" className=""><TbArrowBigUpFilled size={25} /></button></form>
-                            : props.session?.user && <div><TbArrowBigUp size={25} /></div>
+                            ? props.session?.user && <form action={createPostVote}>
+                                <input id="postId" name="postId" defaultValue={props.post.postId} className="hidden" />
+                                <input id="voterId" name="voterId" defaultValue={props.session?.user.userId} className="hidden" />
+                                <input id="value" name="value" defaultValue={0} className="hidden" />
+                                <button type="submit" className=""><TbArrowBigUpFilled size={25} /></button>
+                            </form>
+                            : props.session?.user && <form action={createPostVote}><input id="postId" name="postId" defaultValue={props.post.postId} className="hidden" />
+                                <input id="voterId" name="voterId" defaultValue={props.session?.user.userId} className="hidden" />
+                                <input id="value" name="value" defaultValue={1} className="hidden" />
+                                <button type="submit"><TbArrowBigUp size={25} /></button>
+                            </form>
                         : <div><TbArrowBigUp size={25} /></div>}
                     {!props.session?.user && <Link href={"/api/auth/signin"}><TbArrowBigUp size={25} /></Link>}
                     <p className="px-2"> {props.postVotes.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0)}</p>
                     {props.session?.user?.username !== props.post.username
                         ? props.postVotes.find((postVote) => postVote.voterId === props.session.user?.userId) !== undefined && props.postVotes.find((postVote) => postVote.voterId === props.session.user?.userId).value < 0
-                            ? props.session?.user && <div className=""><TbArrowBigDownFilled size={25} /></div>
-                            : props.session?.user && <div><TbArrowBigDown size={25} /></div>
+                            ? props.session?.user && <form action={createPostVote}>
+                                <input id="postId" name="postId" defaultValue={props.post.postId} className="hidden" />
+                                <input id="voterId" name="voterId" defaultValue={props.session?.user.userId} className="hidden" />
+                                <input id="value" name="value" defaultValue={0} className="hidden" />
+                                <button type="submit" className=""><TbArrowBigDownFilled size={25} /></button>
+                            </form>
+                            : props.session?.user && <form action={createPostVote}>
+                                <input id="postId" name="postId" defaultValue={props.post.postId} className="hidden" />
+                                <input id="voterId" name="voterId" defaultValue={props.session?.user.userId} className="hidden" />
+                                <input id="value" name="value" defaultValue={-1} className="hidden" />
+                                <button type="submit"><TbArrowBigDown size={25} /></button>
+                            </form>
                         : <div className=""><TbArrowBigDown size={25} /></div>}
                     {!props.session?.user && <Link href={"/api/auth/signin"}><TbArrowBigDown size={25} /></Link>}
                     <p className="py-3">{props.post.content}</p>

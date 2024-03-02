@@ -22,7 +22,7 @@ export default function SignUpPage() {
                 <label htmlFor="password">Password</label>
                 <input type="password" name="password" id="password" placeholder="Password" required className="px-2 border rounded-lg border-slate-700 py-1" />
             </div>
-            <button className="rounded-xl my-5 py-2 px-2 bg-slate-700 text-white">Sign Up</button>
+            <button type="submit" className="rounded-xl my-5 py-2 px-2 bg-slate-700 text-white">Sign Up</button>
             <Link href={"/"} className="underline text-center">Login</Link>
         </form>
     )
