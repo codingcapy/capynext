@@ -76,7 +76,7 @@ export default function PostComponent(props) {
                     <p>Posted by <strong>{props.post.username}</strong> on {formatDate(props.post.date)} {props.post.edited && "(edited)"}</p>
                     <h2 className="py-5 text-2xl text-slate-700 font-medium text-center">{props.post.title}</h2>
                     {props.session?.user?.username !== props.post.username
-                        ? props.postVotes.find((postVote) => postVote.voterId === props.session.user?.userId) !== undefined && props.postVotes.find((postVote) => postVote.voterId === props.session.user?.userId).value > 0
+                        ? props.postVotes.find((postVote) => postVote.voterId === props.session?.user?.userId) !== undefined && props.postVotes.find((postVote) => postVote.voterId === props.session?.user?.userId).value > 0
                             ? props.session?.user && <form action={createPostVote}>
                                 <input id="postId" name="postId" defaultValue={props.post.postId} className="hidden" />
                                 <input id="voterId" name="voterId" defaultValue={props.session?.user.userId} className="hidden" />
@@ -92,7 +92,7 @@ export default function PostComponent(props) {
                     {!props.session?.user && <Link href={"/api/auth/signin"}><TbArrowBigUp size={25} /></Link>}
                     <p className="px-2"> {props.postVotes.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0)}</p>
                     {props.session?.user?.username !== props.post.username
-                        ? props.postVotes.find((postVote) => postVote.voterId === props.session.user?.userId) !== undefined && props.postVotes.find((postVote) => postVote.voterId === props.session.user?.userId).value < 0
+                        ? props.postVotes.find((postVote) => postVote.voterId === props.session?.user?.userId) !== undefined && props.postVotes.find((postVote) => postVote.voterId === props.session?.user?.userId).value < 0
                             ? props.session?.user && <form action={createPostVote}>
                                 <input id="postId" name="postId" defaultValue={props.post.postId} className="hidden" />
                                 <input id="voterId" name="voterId" defaultValue={props.session?.user.userId} className="hidden" />
@@ -122,7 +122,19 @@ export default function PostComponent(props) {
                             <input type="text" name='postId' id='postId' defaultValue={props.post.postId} className="hidden" />
                         </div>
                     </form>}
-                    {props.comments.map((comment) => <CommentComponent key={comment.commentId} commentId={comment.commentId} username={comment.username} user={props.session?.user} content={comment.content} date={formatDate(comment.date)} edited={comment.edited} deleted={comment.deleted} postId={comment.postId} replies={props.replies.filter((reply) => reply.commentId === comment.commentId)} comments={props.comments} />)}
+                    {props.comments.map((comment) => <CommentComponent
+                        key={comment.commentId}
+                        commentId={comment.commentId}
+                        username={comment.username}
+                        user={props.session?.user}
+                        content={comment.content}
+                        date={formatDate(comment.date)}
+                        edited={comment.edited}
+                        deleted={comment.deleted}
+                        postId={comment.postId}
+                        replies={props.replies.filter((reply) => reply.commentId === comment.commentId)}
+                        comments={props.comments}
+                        commentVotes={props.commentVotes.filter((commentVote) => commentVote.commentId === comment.commentId)} />)}
                 </div>}
         </div>
     )

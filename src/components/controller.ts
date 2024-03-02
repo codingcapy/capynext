@@ -16,6 +16,7 @@ import Post from "../models/Post";
 import Comment from "../models/Comment";
 import Reply from "../models/Reply"
 import PostVote from "../models/PostVote"
+import CommentVote from "@/models/CommentVote";
 
 const saltRounds = 10;
 
@@ -207,6 +208,26 @@ export async function createPostVote(formData) {
     else {
 
         await PostVote.create({ _id, value, postId, voterId, postVoteId })
+        redirect(`/posts/${postId}`)
+    }
+}
+
+export async function createCommentVote(formData) {
+    const commentVotes = await CommentVote.find({})
+    const commentVoteId = commentVotes.length === 0 ? 1 : commentVotes[commentVotes.length - 1].commentVoteId + 1
+    const _id = commentVotes.length === 0 ? 1 : commentVotes[commentVotes.length - 1].commentVoteId + 1
+    const value = formData.get('value')
+    const postId = formData.get('postId')
+    const commentId = formData.get('commentId')
+    const voterId = formData.get('voterId')
+    const commentVote = await CommentVote.find({ voterId: voterId })
+    if (commentVote.length > 0) {
+        await CommentVote.findOneAndUpdate({ voterId: voterId }, { value })
+        redirect(`/posts/${postId}`)
+    }
+    else {
+
+        await CommentVote.create({ _id, value, postId, voterId, commentId, commentVoteId })
         redirect(`/posts/${postId}`)
     }
 }

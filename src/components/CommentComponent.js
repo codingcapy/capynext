@@ -10,8 +10,9 @@ description: CommentComponent for CapyNext
 
 import { useState, useEffect } from "react";
 import { TbArrowBigUp, TbArrowBigDown, TbArrowBigUpFilled, TbArrowBigDownFilled } from 'react-icons/tb';
-import { createReply, deleteComment, updateComment } from "./controller";
+import { createCommentVote, createReply, deleteComment, updateComment } from "./controller";
 import ReplyComponent from './ReplyComponent';
+import Link from "next/link";
 
 export default function CommentComponent(props) {
 
@@ -33,13 +34,13 @@ export default function CommentComponent(props) {
         setReplyMode(!replyMode);
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         setCommentEditMode(false)
-    },[props.content])
+    }, [props.content])
 
-    useEffect(()=>{
+    useEffect(() => {
         setReplyMode(false)
-    },[props.comments])
+    }, [props.comments])
 
     return (
         <div className="my-3">
@@ -57,8 +58,42 @@ export default function CommentComponent(props) {
                         <input type="text" name='postId' id='postId' defaultValue={props.postId} className="hidden" />
                         <input type="text" name='commentId' id='commentId' defaultValue={props.commentId} className="hidden" /><button type="submit" className="px-3 font-bold">Delete</button></form>}</div>
             }
-            <p>Upvotes: <button className="px-1"><TbArrowBigUp size={20} /></button><button className="px-1"><TbArrowBigDown size={20} /></button>
-                {props.user && <button onClick={toggleReplyMode} className="px-3 font-bold">Reply</button>}</p>
+            <div className="flex">Upvotes: {props.commentVotes.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0)}
+                {props.user?.username !== props.username
+                    ? props.commentVotes.find((commentVote) => commentVote.voterId === props.user?.userId) !== undefined && props.commentVotes.find((commentVote) => commentVote.voterId === props.user?.userId).value > 0
+                        ? props.user && <form action={createCommentVote}>
+                            <input id="postId" name="postId" defaultValue={props.postId} className="hidden" />
+                            <input id="commentId" name="commentId" defaultValue={props.commentId} className="hidden" />
+                            <input id="voterId" name="voterId" defaultValue={props.user?.userId} className="hidden" />
+                            <input id="value" name="value" defaultValue={0} className="hidden" />
+                            <button className="px-1"><TbArrowBigUpFilled size={20} /></button>
+                        </form>
+                        : props.user && <form action={createCommentVote}>
+                            <input id="postId" name="postId" defaultValue={props.postId} className="hidden" />
+                            <input id="commentId" name="commentId" defaultValue={props.commentId} className="hidden" />
+                            <input id="voterId" name="voterId" defaultValue={props.user?.userId} className="hidden" />
+                            <input id="value" name="value" defaultValue={1} className="hidden" />
+                            <button className="px-1"><TbArrowBigUp size={20} /></button>
+                        </form>
+                    : ""}
+                {props.user?.username !== props.username
+                    ? props.commentVotes.find((commentVote) => commentVote.voterId === props.user?.userId) !== undefined && props.commentVotes.find((commentVote) => commentVote.voterId === props.user?.userId).value < 0
+                        ? props.user && <form action={createCommentVote}>
+                            <input id="postId" name="postId" defaultValue={props.postId} className="hidden" />
+                            <input id="commentId" name="commentId" defaultValue={props.commentId} className="hidden" />
+                            <input id="voterId" name="voterId" defaultValue={props.user?.userId} className="hidden" />
+                            <input id="value" name="value" defaultValue={0} className="hidden" />
+                            <button type="submit" className="px-1"><TbArrowBigDownFilled size={20} /></button>
+                        </form>
+                        : props.user && <form action={createCommentVote}>
+                            <input id="postId" name="postId" defaultValue={props.postId} className="hidden" />
+                            <input id="commentId" name="commentId" defaultValue={props.commentId} className="hidden" />
+                            <input id="voterId" name="voterId" defaultValue={props.user?.userId} className="hidden" />
+                            <input id="value" name="value" defaultValue={-1} className="hidden" />
+                            <button type="submit" className="px-1"><TbArrowBigDown size={20} /></button>
+                        </form>
+                    : ""}
+                {props.user && <button onClick={toggleReplyMode} className="px-3 font-bold">Reply</button>}</div>
             {replyMode && <div>
                 <form action={createReply}>
                     <input type="text" name="content" id="content" className="px-2 py-1 border rounded-lg border-slate-700" required />
