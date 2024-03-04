@@ -32,7 +32,7 @@ export default function ProfileComponent(props) {
             <h2 className="py-5 text-2xl text-slate-700 font-medium">Your Posts</h2>
             {props.posts.length === 0 ? <p>You haven't posted anything yet!</p> : props.posts.map((post) => <div key={post.postId} className="py-3">
                 <Link href={`/posts/${post.postId.toString()}`} className="">
-                    <p>Posted by <strong>{post.username}</strong> on {post.date.toLocaleString()}</p>
+                    <p>Posted by <strong>{post.username}</strong> on {post.date}</p>
                     <h3>{post.title}</h3>
                     <p>{post.content}</p>
                 </Link>
@@ -40,14 +40,14 @@ export default function ProfileComponent(props) {
             <h2 className="py-5 text-2xl text-slate-700 font-medium">Your Comments</h2>
             {props.comments.length === 0 ? <p>You haven't added any comments yet!</p> : props.comments.map((comment) => <div key={comment.commentId} className="my-3">
                 <Link href={`/posts/${comment.postId.toString()}`} className="">
-                    <p><strong>{comment.username}</strong> {comment.date.toLocaleString()}</p>
+                    <p><strong>{comment.username}</strong> {comment.date}</p>
                     <p>{comment.content}</p>
                 </Link>
             </div>)}
             <h2 className="py-5 text-2xl text-slate-700 font-medium">Your Replies</h2>
             {props.replies.length === 0 ? <p>You haven't added any replies yet!</p> : props.replies.map((reply) => <div key={reply.replyId} className="my-3">
                 <Link href={`/posts/${reply.postId.toString()}`} className="">
-                    <p><strong>{reply.username}</strong> {reply.date.toLocaleString()}</p>
+                    <p><strong>{reply.username}</strong> {reply.date}</p>
                     <p>{reply.content}</p>
                 </Link>
             </div>)}
