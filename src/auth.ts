@@ -28,6 +28,7 @@ export const authConfig = {
             },
             async authorize(credentials) {
                 await db
+                //@ts-ignore
                 const user = await User.findOne({ username: credentials.username });
                 if (!user) {
                     return null
