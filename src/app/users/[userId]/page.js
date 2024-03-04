@@ -9,9 +9,9 @@ import { auth } from '@/auth';
 export default async function ProfilePage() {
 
     const session = await auth();
-    const posts = await Post.find({ postId: parseInt(session.user.userId) }).lean();
-    const comments = await Comment.find({ postId: parseInt(session.user.userId) }).lean();
-    const replies = await Reply.find({ postId: parseInt(session.user.userId) }).lean();
+    const posts = await Post.find({ userId: parseInt(session.user.userId) }).lean();
+    const comments = await Comment.find({ userId: parseInt(session.user.userId) }).lean();
+    const replies = await Reply.find({ userId: parseInt(session.user.userId) }).lean();
 
     posts.forEach((post)=>{
         post.date = new Date(post.date).toLocaleString('en-US', {

@@ -175,22 +175,41 @@ export async function createReply(formData) {
     const userId = formData.get('userId')
     const postId = formData.get('postId')
     const commentId = formData.get('commentId')
-    await Reply.create({ _id, content, username, userId: parseInt(userId), postId: parseInt(postId), commentId: parseInt(commentId), replyId })
-    redirect(`/posts/${postId}`)
+    const replyUsername = formData.get('replyusername')
+    if (replyUsername != null) {
+        const fullContent = `@${replyUsername} ${content}`
+        await Reply.create({ _id, content: fullContent, username, userId: parseInt(userId), postId: parseInt(postId), commentId: parseInt(commentId), replyId })
+        redirect(`/posts/${postId}`)
+    }
+    else {
+        await Reply.create({ _id, content, username, userId: parseInt(userId), postId: parseInt(postId), commentId: parseInt(commentId), replyId })
+        redirect(`/posts/${postId}`)
+    }
 }
 
 export async function updateReply(formData) {
     const postId = formData.get('postId')
     const replyId = formData.get('replyId')
     const content = formData.get('content')
+    // const replyUsername = formData.get('replyusername')
     const edited = true;
     const deleted = false;
+    // if (replyUsername != null) {
+    //     const fullContent = `@${replyUsername} ${content}`
+    //     await Reply.findOneAndUpdate(
+    //         { replyId: parseInt(replyId) },
+    //         { content: fullContent, edited, deleted },
+    //         { new: true }
+    //     );
+    // }
+    // else {
     await Reply.findOneAndUpdate(
         { replyId: parseInt(replyId) },
         { content, edited, deleted },
         { new: true }
     );
     redirect(`/posts/${postId}`)
+    // }
 }
 
 export async function deleteReply(formData) {

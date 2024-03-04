@@ -34,7 +34,7 @@ export default async function Posts() {
     const postVotes = await PostVote.find({ postId: { $gte: 1, $lte: post } });
 
     return (
-        <main className='flex-1 mx-auto py-2 px-2'>
+        <main className='flex-1 mx-auto py-2 px-2 max-w-screen-xl'>
             <h2 className="py-10 text-2xl font-medium text-center">Posts</h2>
             <div className="md:grid md:gap-4 md:grid-cols-3">
                 {posts.map((post) =>

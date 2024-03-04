@@ -48,6 +48,7 @@ export default function ReplyComponent(props) {
                     <input type="text" name="content" id="content" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} className="px-2 py-1 border rounded-lg border-slate-700" required />
                     <input type="text" name='postId' id='postId' defaultValue={props.postId} className="hidden" />
                     <input type="text" name='replyId' id='replyId' defaultValue={props.replyId} className="hidden" />
+                    <input type="text" name='replyusername' id='replyusername' defaultValue={props.username} className="hidden" />
                     <button type="submit" className="px-3 font-bold">Update</button>
                     <button onClick={toggleReplyEditMode} className="px-3 font-bold">Cancel</button>
                 </form>
@@ -105,6 +106,7 @@ export default function ReplyComponent(props) {
                     <input type="text" name='commentId' id='commentId' defaultValue={props.commentId} className="hidden" />
                     <input type="text" name='userId' id='userId' defaultValue={props.user.userId} className="hidden" />
                     <input type="text" name='username' id='username' defaultValue={props.user.username} className="hidden" />
+                    <input type="text" name='replyusername' id='replyusername' defaultValue={props.username} className="hidden" />
                     <p><button type="submit" className="px-3 font-bold">Reply</button>
                         <button className="px-3 font-bold" onClick={toggleReplyMode}>Cancel</button></p>
                 </form>
