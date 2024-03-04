@@ -37,6 +37,19 @@ export async function createUser(formData) {
     }
 }
 
+export async function updateUser(formData) {
+    const userId = formData.get("userId")
+    const user = await await User.findOne({ userId: parseInt(userId) })
+    const incomingPassword = formData.get("password")
+    const encrypted = await bcrypt.hash(incomingPassword, saltRounds)
+    const updatedUser = await User.findOneAndUpdate(
+        { userId: userId },
+        { password: encrypted },
+        { new: true }
+    );
+    redirect("/")
+}
+
 export async function validateSession() {
     const session = await auth();
     !session && redirect("/")

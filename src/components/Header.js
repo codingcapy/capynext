@@ -27,7 +27,7 @@ export default async function Header() {
             <div>
                 {!session && <Link href={"/api/auth/signin"} className="px-5">Login</Link>}
                 {!session && <Link href={"/users/signup"} className="px-5">Sign up</Link>}
-                {session?.user.username}
+                <Link href={`/users/${session?.user.userId}`}>{session?.user.username}</Link>
                 {session && <Logout />}
             </div>
         </header>
