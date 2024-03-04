@@ -22,6 +22,7 @@ import ReplyVote from "@/models/ReplyVote";
 const saltRounds = 10;
 
 export async function createUser(formData) {
+    //@ts-ignore
     const users = await User.find({})
     const userId = users.length === 0 ? 1 : users[users.length - 1].userId + 1
     const _id = users.length === 0 ? 1 : users[users.length - 1].userId + 1
@@ -32,6 +33,7 @@ export async function createUser(formData) {
     }
     else {
         const encrypted = await bcrypt.hash(password, saltRounds)
+        //@ts-ignore
         const user = await User.create({ _id, username: username, password: encrypted, userId: userId })
         redirect("/api/auth/signin")
     }
@@ -39,9 +41,11 @@ export async function createUser(formData) {
 
 export async function updateUser(formData) {
     const userId = formData.get("userId")
+    //@ts-ignore
     const user = await await User.findOne({ userId: parseInt(userId) })
     const incomingPassword = formData.get("password")
     const encrypted = await bcrypt.hash(incomingPassword, saltRounds)
+    //@ts-ignore
     const updatedUser = await User.findOneAndUpdate(
         { userId: userId },
         { password: encrypted },
@@ -57,6 +61,7 @@ export async function validateSession() {
 }
 
 export async function createPost(formData) {
+    //@ts-ignore
     const posts = await Post.find({})
     const postId = posts.length === 0 ? 1 : posts[posts.length - 1].postId + 1
     const _id = posts.length === 0 ? 1 : posts[posts.length - 1].postId + 1
@@ -68,12 +73,14 @@ export async function createPost(formData) {
     const content = formData.get('content')
     const username = formData.get('username')
     const userId = formData.get('userId')
+    //@ts-ignore
     await Post.create({ _id, title, topic, content, username, userId, postId })
     redirect("/")
 }
 
 export async function getPosts() {
     try {
+        //@ts-ignore
         const allPosts = await Post.find({})
         let post = 0
         if (allPosts.length < 10) {
@@ -82,6 +89,7 @@ export async function getPosts() {
         else {
             post = 10
         }
+        //@ts-ignore
         const posts = await Post.find({ postId: { $gte: 1, $lte: post } }).limit(10)
         const pages: number[] = []
         for (let i = 0; i < allPosts.length; ++i) {
@@ -89,8 +97,11 @@ export async function getPosts() {
                 pages.push(i / 10 + 1)
             }
         }
+        //@ts-ignore
         const comments = await Comment.find({ postId: { $gte: 1, $lte: post } })
+        //@ts-ignore
         const replies = await Reply.find({ postId: { $gte: 1, $lte: post } })
+        //@ts-ignore
         const postVotes = await PostVote.find({ postId: { $gte: 1, $lte: post } })
     }
     catch (err) {
@@ -105,6 +116,7 @@ export async function updatePost(formData) {
     const content = formData.get('content')
     const edited = true;
     const deleted = false;
+    //@ts-ignore
     await Post.findOneAndUpdate(
         { postId: postId },
         { title, topic, content, edited, deleted },
@@ -118,6 +130,7 @@ export async function deletePost(formData) {
     const content = "[This post was deleted]"
     const edited = false;
     const deleted = true;
+    //@ts-ignore
     await Post.findOneAndUpdate(
         { postId: postId },
         { content, edited, deleted },
@@ -127,6 +140,7 @@ export async function deletePost(formData) {
 }
 
 export async function createComment(formData) {
+    //@ts-ignore
     const comments = await Comment.find({})
     const commentId = comments.length === 0 ? 1 : comments[comments.length - 1].commentId + 1;
     const _id = comments.length === 0 ? 1 : comments[comments.length - 1].commentId + 1;
@@ -134,6 +148,7 @@ export async function createComment(formData) {
     const username = formData.get('username')
     const userId = formData.get('userId')
     const postId = formData.get('postId')
+    //@ts-ignore
     await Comment.create({ _id, content, username, commentId, userId, postId: parseInt(postId) })
     redirect(`/posts/${postId}`)
 }
@@ -144,6 +159,7 @@ export async function updateComment(formData) {
     const content = formData.get('content')
     const edited = true;
     const deleted = false;
+    //@ts-ignore
     await Comment.findOneAndUpdate(
         { commentId: parseInt(commentId) },
         { content, edited, deleted },
@@ -158,6 +174,7 @@ export async function deleteComment(formData) {
     const content = "[This post was deleted]"
     const edited = false;
     const deleted = true;
+    //@ts-ignore
     await Comment.findOneAndUpdate(
         { commentId: parseInt(commentId) },
         { content, edited, deleted },
@@ -167,6 +184,7 @@ export async function deleteComment(formData) {
 }
 
 export async function createReply(formData) {
+    //@ts-ignore
     const replies = await Reply.find({})
     const replyId = replies.length === 0 ? 1 : replies[replies.length - 1].replyId + 1;
     const _id = replies.length === 0 ? 1 : replies[replies.length - 1].replyId + 1;
@@ -178,10 +196,12 @@ export async function createReply(formData) {
     const replyUsername = formData.get('replyusername')
     if (replyUsername != null) {
         const fullContent = `@${replyUsername} ${content}`
+        //@ts-ignore
         await Reply.create({ _id, content: fullContent, username, userId: parseInt(userId), postId: parseInt(postId), commentId: parseInt(commentId), replyId })
         redirect(`/posts/${postId}`)
     }
     else {
+        //@ts-ignore
         await Reply.create({ _id, content, username, userId: parseInt(userId), postId: parseInt(postId), commentId: parseInt(commentId), replyId })
         redirect(`/posts/${postId}`)
     }
@@ -203,6 +223,7 @@ export async function updateReply(formData) {
     //     );
     // }
     // else {
+    //@ts-ignore
     await Reply.findOneAndUpdate(
         { replyId: parseInt(replyId) },
         { content, edited, deleted },
@@ -218,6 +239,7 @@ export async function deleteReply(formData) {
     const content = "[This post was deleted]"
     const edited = false;
     const deleted = true;
+    //@ts-ignore
     await Reply.findOneAndUpdate(
         { replyId: parseInt(replyId) },
         { content, edited, deleted },
@@ -227,25 +249,29 @@ export async function deleteReply(formData) {
 }
 
 export async function createPostVote(formData) {
+    //@ts-ignore
     const postVotes = await PostVote.find({})
     const postVoteId = postVotes.length === 0 ? 1 : postVotes[postVotes.length - 1].postVoteId + 1
     const _id = postVotes.length === 0 ? 1 : postVotes[postVotes.length - 1].postVoteId + 1
     const value = formData.get('value')
     const postId = formData.get('postId')
     const voterId = formData.get('voterId')
+    //@ts-ignore
     const postVote = await PostVote.find({ voterId: voterId, postId: postId })
     if (postVote.length > 0) {
+        //@ts-ignore
         await PostVote.findOneAndUpdate({ voterId: voterId, postId: postId }, { value })
         redirect(`/posts/${postId}`)
     }
     else {
-
+        //@ts-ignore
         await PostVote.create({ _id, value, postId, voterId, postVoteId })
         redirect(`/posts/${postId}`)
     }
 }
 
 export async function createCommentVote(formData) {
+    //@ts-ignore
     const commentVotes = await CommentVote.find({})
     const commentVoteId = commentVotes.length === 0 ? 1 : commentVotes[commentVotes.length - 1].commentVoteId + 1
     const _id = commentVotes.length === 0 ? 1 : commentVotes[commentVotes.length - 1].commentVoteId + 1
@@ -253,18 +279,22 @@ export async function createCommentVote(formData) {
     const postId = formData.get('postId')
     const commentId = formData.get('commentId')
     const voterId = formData.get('voterId')
+    //@ts-ignore
     const commentVote = await CommentVote.find({ voterId: voterId, commentId: commentId })
     if (commentVote.length > 0) {
+        //@ts-ignore
         await CommentVote.findOneAndUpdate({ voterId: voterId, commentId: commentId }, { value })
         redirect(`/posts/${postId}`)
     }
     else {
+        //@ts-ignore
         await CommentVote.create({ _id, value, postId, voterId, commentId, commentVoteId })
         redirect(`/posts/${postId}`)
     }
 }
 
 export async function createReplyVote(formData) {
+    //@ts-ignore
     const replyVotes = await ReplyVote.find({})
     const replyVoteId = replyVotes.length === 0 ? 1 : replyVotes[replyVotes.length - 1].replyVoteId + 1
     const _id = replyVotes.length === 0 ? 1 : replyVotes[replyVotes.length - 1].replyVoteId + 1
@@ -273,13 +303,15 @@ export async function createReplyVote(formData) {
     const commentId = formData.get('commentId')
     const replyId = formData.get('replyId')
     const voterId = formData.get('voterId')
+    //@ts-ignore
     const replyVote = await ReplyVote.find({ voterId: voterId, replyId: replyId })
     if (replyVote.length > 0) {
+        //@ts-ignore
         await ReplyVote.findOneAndUpdate({ voterId: voterId, replyId: replyId }, { value })
         redirect(`/posts/${postId}`)
     }
     else {
-
+        //@ts-ignore
         await ReplyVote.create({ _id, value, postId, voterId, commentId, replyId, replyVoteId })
         redirect(`/posts/${postId}`)
     }
