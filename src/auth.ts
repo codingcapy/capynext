@@ -8,7 +8,6 @@ description: auth for CapyNext
 
 import type { NextAuthConfig } from "next-auth";
 import NextAuth from "next-auth";
-import GitHub from "next-auth/providers/GitHub";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "./lib/mongoclient";
@@ -21,7 +20,7 @@ export const authConfig = {
     session: {
         strategy: "jwt"
     },
-    providers: [GitHub, CredentialsProvider(
+    providers: [CredentialsProvider(
         {
             credentials: {
                 username: { label: "Username", type: "text" },
