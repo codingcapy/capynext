@@ -134,7 +134,7 @@ export default function PostComponent(props) {
                         postId={comment.postId}
                         replies={props.replies.filter((reply) => reply.commentId === comment.commentId)}
                         comments={props.comments}
-                        commentVotes={props.commentVotes.filter((commentVote) => commentVote.commentId === comment.commentId)} />)}
+                        commentVotes={props.commentVotes.filter((commentVote) => commentVote.commentId === comment.commentId)} replyVotes={props.replyVotes.filter((replyVote) => replyVote.commentId === comment.commentId)} />)}
                 </div>}
         </div>
     )

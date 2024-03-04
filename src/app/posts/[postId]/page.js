@@ -13,6 +13,7 @@ import PostVote from '@/models/PostVote';
 import Reply from '@/models/Reply';
 import PostComponent from '@/components/PostComponent';
 import CommentVote from '@/models/CommentVote';
+import ReplyVote from '@/models/ReplyVote';
 
 export default async function PostDetailsPage({ params }) {
 
@@ -22,6 +23,7 @@ export default async function PostDetailsPage({ params }) {
     const replies = await Reply.find({ postId: parseInt(params.postId) }).lean();
     const postVotes = await PostVote.find({ postId: parseInt(params.postId) }).lean();
     const commentVotes = await CommentVote.find({ postId: parseInt(params.postId) }).lean()
+    const replyVotes = await ReplyVote.find({ postId: parseInt(params.postId) }).lean()
 
     post.date = new Date(post.date).toLocaleString('en-US', {
         year: 'numeric',
@@ -37,7 +39,14 @@ export default async function PostDetailsPage({ params }) {
 
     return (
         <main className='flex-1 mx-auto py-2 px-2'>
-            <PostComponent post={post} session={session} comments={comments} replies={replies} postVotes={postVotes}  commentVotes={commentVotes} />
+            <PostComponent
+                post={post}
+                session={session}
+                comments={comments}
+                replies={replies}
+                postVotes={postVotes}
+                commentVotes={commentVotes}
+                replyVotes={replyVotes} />
         </main>
     )
 

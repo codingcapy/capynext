@@ -201,7 +201,7 @@ export async function createPostVote(formData) {
     const value = formData.get('value')
     const postId = formData.get('postId')
     const voterId = formData.get('voterId')
-    const postVote = await PostVote.find({ voterId: voterId })
+    const postVote = await PostVote.find({ voterId: voterId, postId: postId })
     if (postVote.length > 0) {
         await PostVote.findOneAndUpdate({ voterId: voterId, postId: postId }, { value })
         redirect(`/posts/${postId}`)
@@ -223,11 +223,10 @@ export async function createCommentVote(formData) {
     const voterId = formData.get('voterId')
     const commentVote = await CommentVote.find({ voterId: voterId, commentId: commentId })
     if (commentVote.length > 0) {
-        await CommentVote.findOneAndUpdate({ voterId: voterId }, { value })
+        await CommentVote.findOneAndUpdate({ voterId: voterId, commentId: commentId }, { value })
         redirect(`/posts/${postId}`)
     }
     else {
-
         await CommentVote.create({ _id, value, postId, voterId, commentId, commentVoteId })
         redirect(`/posts/${postId}`)
     }
@@ -244,7 +243,7 @@ export async function createReplyVote(formData) {
     const voterId = formData.get('voterId')
     const replyVote = await ReplyVote.find({ voterId: voterId, replyId: replyId })
     if (replyVote.length > 0) {
-        await ReplyVote.findOneAndUpdate({ voterId: voterId }, { value })
+        await ReplyVote.findOneAndUpdate({ voterId: voterId, replyId: replyId }, { value })
         redirect(`/posts/${postId}`)
     }
     else {
